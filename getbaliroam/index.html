@@ -197,7 +197,7 @@ function render(f){
   $("#grid").innerHTML=P.filter(x=>f==="all"||x.c===f).map(x=>`
   <article class="card">
     <div class="pimg" style="background:${x.g}">${x.o?`<span class="save">Save ${Math.round((1-x.p/x.o)*100)}%</span>`:""}<span class="chip">${lab(x)}</span>${x.e}
-      <img src="images/${x.id}.jpg" alt="${x.t}" loading="lazy" onerror="this.remove()"></div>
+      <img src="images/${x.id.startsWith('xl')?'xl-bali':'tsel-bali'}.jpg" alt="${x.t}" loading="lazy" onerror="this.remove()"></div>
     <div class="pbody"><h3>${x.t}</h3><ul>${x.f.map(i=>`<li>${i}</li>`).join("")}</ul>
       <div class="price"><small>From</small><b>${rp(x.p)}</b><s>${x.o?rp(x.o):"&nbsp;"}</s></div>
       <button class="btn" data-id="${x.id}">Buy now</button></div>
