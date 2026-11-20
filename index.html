@@ -41,14 +41,15 @@ nav a{margin-left:22px;font-weight:500;color:var(--mut)}nav a:hover{color:var(--
 .grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
 .card{background:var(--card);border-radius:var(--r);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column;transition:.2s}
 .card:hover{box-shadow:0 10px 30px rgba(16,34,43,.1);transform:translateY(-3px)}
-.pimg{aspect-ratio:16/10;position:relative;display:grid;place-items:center;font-size:3rem;color:#fff}
+.pimg{aspect-ratio:4/3;position:relative;display:grid;place-items:center;font-size:3rem;color:#fff}
 .save{position:absolute;top:12px;left:12px;background:var(--acc);color:#fff;font-size:.78rem;font-weight:700;padding:4px 10px;border-radius:999px;z-index:2}
 .pbody{padding:16px;display:flex;flex-direction:column;flex:1}
 .pbody h3{font-size:1.05rem;margin-bottom:6px}
 .pbody ul{list-style:none;padding:0;color:var(--mut);font-size:.9rem;margin-bottom:14px}
 .pbody li:before{content:"✓ ";color:var(--brand);font-weight:700}
-.price{margin-top:auto;display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
-.price b{font-size:1.3rem}.price s{color:#9aa9b0;font-size:.9rem}
+.price{margin-top:auto;display:flex;flex-direction:column;gap:2px;margin-bottom:14px;white-space:nowrap}
+.price small{color:var(--mut);font-size:.8rem}.price b{font-size:1.35rem;line-height:1.2}.price s{color:#9aa9b0;font-size:.88rem;min-height:1.3em}
+.chip{position:absolute;left:12px;bottom:12px;background:rgba(16,34,43,.78);color:#fff;font-size:.78rem;font-weight:600;padding:4px 10px;border-radius:999px;z-index:2}
 .card .btn{width:100%;text-align:center;padding:11px}
 table{width:100%;border-collapse:collapse;background:#fff;border-radius:var(--r);overflow:hidden;border:1px solid var(--line)}
 th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line);font-size:.95rem}
@@ -189,15 +190,16 @@ const P=[
  {id:"tsel-topup",t:"Telkomsel Data Top Up",c:"topup",p:100000,o:null,g:"linear-gradient(135deg,#364fc7,#91a7ff)",e:"🔄",f:["Add data to your active SIM","No local card needed","Fast processing"]},
  {id:"xl-topup",t:"XL Data Top Up",c:"topup",p:100000,o:null,g:"linear-gradient(135deg,#0b7285,#66d9e8)",e:"🔋",f:["Add data to your active SIM","Pay with any card","Fast processing"]}
 ];
-const rp=n=>"Rp "+n.toLocaleString("id-ID");
+const rp=n=>"Rp\u00a0"+String(n).replace(/\B(?=(\d{3})+(?!\d))/g,".");
+const lab=x=>x.id==="tsel-id"?"eSIM · Nationwide":x.id==="tsel-long"?"eSIM · Long Stay":({esim:"eSIM",sim:"Physical SIM",topup:"Top Up"})[x.c];
 const $=s=>document.querySelector(s);
 function render(f){
   $("#grid").innerHTML=P.filter(x=>f==="all"||x.c===f).map(x=>`
   <article class="card">
-    <div class="pimg" style="background:${x.g}">${x.o?`<span class="save">Save ${Math.round((1-x.p/x.o)*100)}%</span>`:""}${x.e}
+    <div class="pimg" style="background:${x.g}">${x.o?`<span class="save">Save ${Math.round((1-x.p/x.o)*100)}%</span>`:""}<span class="chip">${lab(x)}</span>${x.e}
       <img src="images/${x.id}.jpg" alt="${x.t}" loading="lazy" onerror="this.remove()"></div>
     <div class="pbody"><h3>${x.t}</h3><ul>${x.f.map(i=>`<li>${i}</li>`).join("")}</ul>
-      <div class="price"><b>From ${rp(x.p)}</b>${x.o?`<s>${rp(x.o)}</s>`:""}</div>
+      <div class="price"><small>From</small><b>${rp(x.p)}</b><s>${x.o?rp(x.o):"&nbsp;"}</s></div>
       <button class="btn" data-id="${x.id}">Buy now</button></div>
   </article>`).join("");
 }
